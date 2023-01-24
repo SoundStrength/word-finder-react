@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {testy} from './gameLogic.js';
+import {testy, wordFilter} from './gameLogic.js';
+import './english_words.txt';
 
 
-
+const gameLetters = ['u','m','y','p','n','r','o','l','a'];
 function Square(props){
   return (
     <input className="square" type="text" maxLength={1}>
@@ -12,6 +13,8 @@ function Square(props){
     </input>
   );
 }
+
+
 
   class centreSquare extends React.Component {
     render() {
@@ -31,6 +34,33 @@ function Square(props){
 
 
   }
+
+  class FileSelect extends React.Component {
+    render(){
+      return(
+        <input type="file" id="file-selector" onChange={loadFile}></input>
+      );
+      
+    }
+  }
+
+  function loadFile(event){
+    document.getElementById('file-selector');
+    const fileList = event.target.files;
+    console.log(fileList);
+
+    const reader = new FileReader();
+    reader.readAsText(fileList[0]);
+    reader.onload=function(){
+      //document.getElementById('output').textContent=reader.result;
+      const wordArray = reader.result.split("\n");
+      console.log(reader.readyState);
+      console.log(reader.result);
+      console.log(wordArray[2]);
+      console.log(wordArray[2].length);
+      wordFilter(wordArray, gameLetters);
+    }
+  }
   
   class Board extends React.Component {
 
@@ -40,6 +70,7 @@ function Square(props){
       this.state = {
         letters: Array(9).fill(null),
       };
+      
     }
 
     renderSquare(i) {
@@ -86,6 +117,7 @@ function Square(props){
                   <ol>{/* TODO */}</ol>
               </div>
             </div>
+            <FileSelect/>
             <Submit />
         </>
       );
